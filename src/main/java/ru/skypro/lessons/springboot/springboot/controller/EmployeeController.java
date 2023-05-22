@@ -1,9 +1,8 @@
 package ru.skypro.lessons.springboot.springboot.controller;
 
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.skypro.lessons.springboot.springboot.pojo.Employee;
 import ru.skypro.lessons.springboot.springboot.service.EmployeeService;
 
@@ -15,25 +14,31 @@ import java.util.List;
 public class EmployeeController {
     private final EmployeeService employeeService;
 
-    @GetMapping("/salary/sum")
-    public String salarySum() {
-        return employeeService.salarySum();
+
+    @GetMapping("/{id}")
+    public Employee getEmployeeById(@PathVariable Integer id){
+        return employeeService.getEmployeeById(id);
     }
 
-    @GetMapping("/salary/min")
-    public Employee minSalary() {
-        return employeeService.minSalary();
+    @DeleteMapping("/{id}")
+    public void deleteEmployeeById(@PathVariable Integer id){
+        employeeService.deleteEmployeeById(id);
+    }
+    @GetMapping("/salaryHigherThan")
+    public List<Employee> moreThanDefinedSalary(@RequestParam("salary") int definedSalary){
+        return employeeService.moreThanDefinedSalary(definedSalary);
+    }
+    @PutMapping("/{id}")
+    public void refactorEmployeeById(@RequestBody Employee employee, @PathVariable Integer id){
+        employeeService.refactorEmployeeById(employee, id);
     }
 
-    @GetMapping("/salary/max")
-    public Employee maxSalary(){
-        return employeeService.maxSalary();
+    @PostMapping("/")
+    public void addSomeEmployees(@RequestBody List<Employee> list){
+        employeeService.addSomeEmployees(list);
     }
 
-    @GetMapping("/high-salary")
-    public List<Employee> moreThanAverageSalary(){
-        return employeeService.moreThanAverageSalary();
-    }
+
 
 
 

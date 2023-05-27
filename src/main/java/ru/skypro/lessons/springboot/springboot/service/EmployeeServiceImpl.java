@@ -2,60 +2,108 @@ package ru.skypro.lessons.springboot.springboot.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
+import ru.skypro.lessons.springboot.springboot.dto.EmployeeDTO;
+import ru.skypro.lessons.springboot.springboot.dto.PositionDTO;
 import ru.skypro.lessons.springboot.springboot.exceptions.IdNotFoundException;
 import ru.skypro.lessons.springboot.springboot.pojo.Employee;
+import ru.skypro.lessons.springboot.springboot.pojo.Position;
+import ru.skypro.lessons.springboot.springboot.projections.EmployeeView;
 import ru.skypro.lessons.springboot.springboot.repository.EmployeeRepository;
 
+import java.awt.print.Pageable;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
 
-   private final EmployeeRepository employeeRepository;
-
-
+    private final EmployeeRepository employeeRepository;
 
     @Override
-    public void addSomeEmployees(List<Employee> list) {
-        employeeRepository.getAllEmployees().addAll(list);
-    }
+    public List<EmployeeDTO> getAllEmployees() {
+        List<Employee> result = new ArrayList<>();
+        employeeRepository.findAll().forEach(result::add);
 
-    @SneakyThrows
-    @Override
-    public void refactorEmployeeById(Employee employee, Integer id) {
-        Employee employeeForDelete = employeeRepository.getAllEmployees().stream()
-                .filter(p->p.getId()==id).findFirst().orElseThrow(()-> new IdNotFoundException("Сотрудника по данному не найдено"));
-        employeeRepository.getAllEmployees().remove(employeeForDelete);
-        employeeRepository.getAllEmployees().add(employee);
+        return result.stream().map(EmployeeDTO::fromEmployee).toList();
     }
 
 
-    @SneakyThrows
     @Override
-    public Employee getEmployeeById(Integer id) {
-        Employee employee = employeeRepository.getAllEmployees().stream()
-                .filter(p->p.getId()==id).findFirst().orElseThrow(()-> new IdNotFoundException("Сотрудника по данному не найдено"));
-        return employee;
+    public void addEmployee(EmployeeDTO employeeDTO) {
+        Employee employee = employeeDTO.toEmployee();
+
+        employeeRepository.save(employee);
     }
 
+
+    @Override
+    public void refactorEmployeeById(EmployeeDTO employeeDTO, Integer id) {
+        Employee employee = employeeDTO.toEmployee();
+        employee.setId(id);
+        employeeRepository.save(employee);
+    }
+
+
+
+
     @SneakyThrows
+    @Override
+    public EmployeeDTO getEmployeeById(Integer id) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new IdNotFoundException("Сотрудника по данному не найдено"));
+
+        return EmployeeDTO.fromEmployee(employee);
+    }
+
     @Override
     public void deleteEmployeeById(Integer id) {
-        Employee employee = employeeRepository.getAllEmployees().stream()
-                .filter(p->p.getId()==id).findFirst().orElseThrow(()-> new IdNotFoundException("Сотрудника по данному не найдено"));
-        employeeRepository.getAllEmployees().remove(employee);
+        employeeRepository.deleteById(id);
     }
 
     @Override
-    public List<Employee> moreThanDefinedSalary(int definedSalary) {
-        return employeeRepository.getAllEmployees().stream()
-                .filter(n->n.getSalary()>definedSalary)
+    public List<EmployeeDTO> moreThanDefinedSalary(Integer definedSalary) {
+         return employeeRepository.findBySalaryGreaterThan(definedSalary)
+                .stream()
+                .map(EmployeeDTO::fromEmployee)
                 .toList();
     }
-    
+
+    @Override
+    public List<EmployeeView> getEmployeeWithHighestSalary(){
+        List<EmployeeView> employeeViewList = new ArrayList<>();
+
+        int max = employeeRepository.findAllEmployeeView().stream()
+                .max(Comparator.comparingInt(EmployeeView::getSalary)).get().getSalary();
+        employeeRepository.findAllEmployeeView().stream()
+                .filter(x->x.getSalary()==max).forEach(employeeViewList::add);
+        return  employeeViewList;
+    }
+    @Override
+    public List<EmployeeView> getEmployeesOnPosition(String positionInfo){
+        if(positionInfo==null||positionInfo.isBlank())return employeeRepository.findAllEmployeeView();
+        try{
+            Integer a  = Integer.parseInt(positionInfo);
+            return employeeRepository.findByPositionId(a);
+
+        }catch (NumberFormatException e){
+            return employeeRepository.findByPositionName(positionInfo);
+        }
+    }
+
+    @Override
+    public List<EmployeeDTO> getEmployeeWithPaging(Integer pageIndex, int unitPerPage) {
+        if(unitPerPage>10)unitPerPage=10;
+        if(pageIndex==null)pageIndex=0;
+
+        PageRequest employeeOfConcretePage = PageRequest.of(pageIndex, unitPerPage);
+        Page<Employee> page = employeeRepository.findAll(employeeOfConcretePage);
+        return page.stream().map(EmployeeDTO::fromEmployee).toList();
+    }
 }

@@ -13,18 +13,23 @@ public class EmployeeExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<?> handleIOException(IOException ioException){
+        ioException.printStackTrace();
         return new ResponseEntity<>(ioException.getCause(), HttpStatus.BAD_REQUEST);
+
     }
     @ExceptionHandler
     public ResponseEntity<?> handleException(Exception exception){
+        exception.printStackTrace();
         return new ResponseEntity<>(exception.getCause(), HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler
     public ResponseEntity<?> sqlException(SQLException sqlException){
+        sqlException.printStackTrace();
         return new ResponseEntity<>(sqlException.getCause(), HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler
     public ResponseEntity<?> idNotFoundException(IdNotFoundException idNotFoundException){
+        idNotFoundException.printStackTrace();
         return new ResponseEntity<>(idNotFoundException.getMessage(), HttpStatus.BAD_REQUEST);
     }
 

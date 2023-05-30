@@ -1,13 +1,24 @@
 package ru.skypro.lessons.springboot.springboot.pojo;
 
+import jakarta.persistence.*;
 import lombok.*;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
+@Data
+@Entity
+@Table(name = "employee")
+
 public class Employee {
-    private int id;
+   @Id
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     private String name;
-    private int salary;
+    private Integer salary;
+
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "position_id")
+    private Position position;
 
 }

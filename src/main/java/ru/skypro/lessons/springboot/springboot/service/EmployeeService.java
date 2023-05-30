@@ -1,16 +1,25 @@
 package ru.skypro.lessons.springboot.springboot.service;
 
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import ru.skypro.lessons.springboot.springboot.dto.EmployeeDTO;
+import ru.skypro.lessons.springboot.springboot.dto.PositionDTO;
 import ru.skypro.lessons.springboot.springboot.pojo.Employee;
+import ru.skypro.lessons.springboot.springboot.projections.EmployeeView;
 
 import java.util.List;
 
 public interface EmployeeService {
 
-    void addSomeEmployees(List<Employee> list);
-    void refactorEmployeeById(Employee employee, Integer id);
-    Employee getEmployeeById(Integer id);
+
+    List<EmployeeDTO> getAllEmployees();
+
+    void addEmployee(EmployeeDTO employeeDTO);
+    void refactorEmployeeById(EmployeeDTO employeeDTO, Integer id);
+    EmployeeDTO getEmployeeById(Integer id);
     void deleteEmployeeById(Integer id);
-    List<Employee> moreThanDefinedSalary(int definedSalary);
+    List<EmployeeDTO> moreThanDefinedSalary(Integer definedSalary);
+    List<EmployeeView> getEmployeeWithHighestSalary();
+    List<EmployeeView> getEmployeesOnPosition(String positionInfo);
+    List<EmployeeDTO> getEmployeeWithPaging(Integer pageIndex, int unitPerPage);
 
 }

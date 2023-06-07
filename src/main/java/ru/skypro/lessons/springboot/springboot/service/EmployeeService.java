@@ -1,6 +1,7 @@
 package ru.skypro.lessons.springboot.springboot.service;
 
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.lessons.springboot.springboot.dto.EmployeeDTO;
 import ru.skypro.lessons.springboot.springboot.dto.PositionDTO;
 import ru.skypro.lessons.springboot.springboot.pojo.Employee;
@@ -21,5 +22,6 @@ public interface EmployeeService {
     List<EmployeeView> getEmployeeWithHighestSalary();
     List<EmployeeView> getEmployeesOnPosition(String positionInfo);
     List<EmployeeDTO> getEmployeeWithPaging(Integer pageIndex, int unitPerPage);
+    void uploadFile(MultipartFile file);
 
 }

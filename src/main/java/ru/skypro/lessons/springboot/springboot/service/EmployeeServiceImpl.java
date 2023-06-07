@@ -1,20 +1,30 @@
 package ru.skypro.lessons.springboot.springboot.service;
 
+
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Resources;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.repository.query.Param;
+
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.lessons.springboot.springboot.dto.EmployeeDTO;
-import ru.skypro.lessons.springboot.springboot.dto.PositionDTO;
+
 import ru.skypro.lessons.springboot.springboot.exceptions.IdNotFoundException;
 import ru.skypro.lessons.springboot.springboot.pojo.Employee;
-import ru.skypro.lessons.springboot.springboot.pojo.Position;
+
 import ru.skypro.lessons.springboot.springboot.projections.EmployeeView;
 import ru.skypro.lessons.springboot.springboot.repository.EmployeeRepository;
 
 import java.awt.print.Pageable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -105,5 +115,24 @@ public class EmployeeServiceImpl implements EmployeeService {
         PageRequest employeeOfConcretePage = PageRequest.of(pageIndex, unitPerPage);
         Page<Employee> page = employeeRepository.findAll(employeeOfConcretePage);
         return page.stream().map(EmployeeDTO::fromEmployee).toList();
+    }
+
+
+    @Override
+    @SneakyThrows
+    public void uploadFile(MultipartFile file){
+        if(file!=null){
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            List<EmployeeDTO> employeeDTOList =
+                    objectMapper.readValue(file.getInputStream(), new TypeReference<List<EmployeeDTO>>(){});
+
+            employeeRepository.saveAll(
+                    employeeDTOList.stream().map(EmployeeDTO::toEmployee).toList());
+
+        }else{
+            System.out.println("Файл не найден");
+        }
+
     }
 }

@@ -8,7 +8,7 @@ import ru.skypro.lessons.springboot.springboot.pojo.Employee;
 import ru.skypro.lessons.springboot.springboot.pojo.Position;
 import ru.skypro.lessons.springboot.springboot.projections.EmployeeView;
 
-import java.awt.print.Pageable;
+
 import java.util.List;
 
 public interface EmployeeRepository extends PagingAndSortingRepository<Employee, Integer>, CrudRepository<Employee, Integer>   {

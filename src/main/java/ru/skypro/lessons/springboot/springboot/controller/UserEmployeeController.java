@@ -1,23 +1,17 @@
 package ru.skypro.lessons.springboot.springboot.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.lessons.springboot.springboot.dto.EmployeeDTO;
-import ru.skypro.lessons.springboot.springboot.dto.PositionDTO;
-import ru.skypro.lessons.springboot.springboot.pojo.Employee;
 import ru.skypro.lessons.springboot.springboot.projections.EmployeeView;
 import ru.skypro.lessons.springboot.springboot.service.EmployeeService;
 
-import java.awt.*;
-import java.awt.print.Pageable;
 import java.util.List;
 
 @RestController
-@RequestMapping("/employee")
+@RequestMapping("/user/employee")
 @RequiredArgsConstructor
-public class EmployeeController {
+public class UserEmployeeController {
     private final EmployeeService employeeService;
 
 
@@ -32,24 +26,13 @@ public class EmployeeController {
         return employeeService.getEmployeeById(id);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteEmployeeById(@PathVariable Integer id){
-        employeeService.deleteEmployeeById(id);
-    }
+
     @GetMapping("/salaryHigherThan")
     public List<EmployeeDTO> moreThanDefinedSalary(@RequestParam("salary") Integer definedSalary){
         return employeeService.moreThanDefinedSalary(definedSalary);
     }
-    @PutMapping("/{id}")
-    public void refactorEmployeeById(@RequestBody EmployeeDTO employeeDTO, @PathVariable Integer id){
-        employeeService.refactorEmployeeById(employeeDTO, id);
-    }
 
-    @PostMapping("/")
-    public void addEmployee(@RequestBody EmployeeDTO employeeDTO){
-        employeeService.addEmployee(employeeDTO);
-    }
-    @GetMapping("/EmployeeWithHighestSalary()")
+    @GetMapping("/EmployeeWithHighestSalary")
     public List<EmployeeView> getEmployeeWithHighestSalary(){
         return employeeService.getEmployeeWithHighestSalary();
 
@@ -61,10 +44,6 @@ public class EmployeeController {
     @GetMapping("/page")
     public List<EmployeeDTO> getEmployeeWithPaging(@RequestParam("page") Integer pageIndex, int unitPerPage){
         return employeeService.getEmployeeWithPaging(pageIndex, unitPerPage);
-    }
-    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void uploadFile(@RequestParam("file") MultipartFile file){
-        employeeService.uploadFile(file);
     }
 
 }

@@ -39,6 +39,8 @@ public class SecurityConfig {
             registry.requestMatchers("/swagger-ui/**","/v3/api-docs/**","/swagger-ui.html",
                             "/swagger-resources/**", "/webjars/**")
                     .permitAll()
+                    .requestMatchers(new AntPathRequestMatcher("/all/**"))
+                    .permitAll()
                     .requestMatchers(new AntPathRequestMatcher("/admin/**"))
                     .hasAnyRole("ADMIN")
                     .requestMatchers(new AntPathRequestMatcher("/user/**"))

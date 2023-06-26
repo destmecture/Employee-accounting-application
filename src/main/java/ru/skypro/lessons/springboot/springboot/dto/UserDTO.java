@@ -17,7 +17,6 @@ public class UserDTO {
     private Integer id;
     private String username;
     private String password;
-    private boolean enabled;
     private Role role;
 
     public UserDTO fromUser(User user){
@@ -25,7 +24,6 @@ public class UserDTO {
         userDTO.setId(user.getId());
         userDTO.setUsername(user.getUsername());
         userDTO.setPassword(user.getPassword());
-        userDTO.setEnabled(user.isEnabled());
         userDTO.setRole(user.getRole());
 
 
@@ -36,7 +34,6 @@ public class UserDTO {
         user.setId(this.getId());
         user.setUsername(this.getUsername());
         user.setPassword(this.getPassword());
-        user.setEnabled(this.isEnabled());
         user.setRole(this.getRole());
         return user;
     }

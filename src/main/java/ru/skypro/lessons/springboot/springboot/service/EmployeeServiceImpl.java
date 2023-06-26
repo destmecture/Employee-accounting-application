@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
-    Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
     private final EmployeeRepository employeeRepository;
 

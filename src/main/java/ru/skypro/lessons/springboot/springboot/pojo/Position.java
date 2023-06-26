@@ -18,6 +18,7 @@ public class Position {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(insertable = false, updatable = false)
     private Integer position_id;
+    @Column(nullable = false)
     private String position_name;
 
 

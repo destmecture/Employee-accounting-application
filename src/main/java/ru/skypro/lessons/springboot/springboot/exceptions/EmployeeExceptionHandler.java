@@ -13,7 +13,7 @@ import java.sql.SQLException;
 @RestControllerAdvice
 public class EmployeeExceptionHandler {
 
-    Logger logger = LoggerFactory.getLogger(EmployeeExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(EmployeeExceptionHandler.class);
 
     @ExceptionHandler
     public ResponseEntity<?> handleException(Exception exception){

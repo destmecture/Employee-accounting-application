@@ -14,7 +14,9 @@ public class Report {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer report_id;
-    @Column(columnDefinition="CLOB")
+
+    @Lob
+    @Column(nullable = false)
     private byte[] bytes;
 
 }

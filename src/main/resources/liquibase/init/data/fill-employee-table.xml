@@ -1,0 +1,22 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+
+    <changeSet id="fill-employee-table" author="Igor">
+
+        <insert tableName="employee">
+            <column name="name">Alex</column>
+            <column name="salary">50000</column>
+            <column name="position_id">1</column>
+        </insert>
+        <insert tableName="employee">
+            <column name="name">Ivan</column>
+            <column name="salary">40000</column>
+            <column name="position_id">2</column>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

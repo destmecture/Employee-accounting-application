@@ -1,0 +1,40 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+
+
+    <changeSet id="create-users-table" author="Igor">
+
+        <preConditions>
+            <and>
+                <not>
+                    <tableExists tableName="users"/>
+                </not>
+                <tableExists tableName="roles"/>
+            </and>
+        </preConditions>
+
+        <createTable tableName="users">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="INT">
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="users"
+                                 baseColumnNames="role_id"
+                                 constraintName="FK_USERS_ROLE_ID"
+                                 referencedTableName="roles"
+                                 referencedColumnNames="role_id"/>
+    </changeSet>
+</databaseChangeLog>

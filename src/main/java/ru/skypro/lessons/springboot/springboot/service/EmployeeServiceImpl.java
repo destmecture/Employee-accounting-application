@@ -3,12 +3,10 @@ package ru.skypro.lessons.springboot.springboot.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.Resources;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -19,34 +17,28 @@ import ru.skypro.lessons.springboot.springboot.dto.EmployeeDTO;
 import ru.skypro.lessons.springboot.springboot.exceptions.IdNotFoundException;
 import ru.skypro.lessons.springboot.springboot.pojo.Employee;
 
-import ru.skypro.lessons.springboot.springboot.projections.EmployeeView;
+import ru.skypro.lessons.springboot.springboot.projections.EmployeeInfo;
 import ru.skypro.lessons.springboot.springboot.repository.EmployeeRepository;
 
-import java.awt.print.Pageable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
-    Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
     private final EmployeeRepository employeeRepository;
 
     @Override
     public List<EmployeeDTO> getAllEmployees() {
         logger.info("Was invoked method for getting all employees");
-        List<Employee> result = new ArrayList<>();
-        employeeRepository.findAll().forEach(result::add);
+        List<EmployeeDTO> employeeDTOList = employeeRepository.findAllEmployeeDTO();
+
         logger.debug("Database was accessed successfully");
 
-        return result.stream().map(EmployeeDTO::fromEmployee).toList();
+        return employeeDTOList;
     }
 
 
@@ -77,6 +69,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmployeeDTO getEmployeeById(Integer id) {
         logger.info("Was invoked method for getting employee by id");
         String strId = ""+id;
+        logger.info("Id was stringed");
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new IdNotFoundException("Сотрудника по id  "+strId+" не найдено"));
         logger.debug("Database was accessed successfully");
@@ -102,38 +95,38 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<EmployeeView> getEmployeeWithHighestSalary(){
+    public List<EmployeeInfo> getEmployeeWithHighestSalary(){
         logger.info("Was invoked method for getting employee with highest salary");
-        List<EmployeeView> employeeViewList = new ArrayList<>();
+        List<EmployeeInfo> employeeInfoList = new ArrayList<>();
 
         int max = employeeRepository.findAllEmployeeView().stream()
-                .max(Comparator.comparingInt(EmployeeView::getSalary)).get().getSalary();
+                .max(Comparator.comparingInt(EmployeeInfo::getSalary)).get().getSalary();
         logger.debug("Database was accessed successfully");
         employeeRepository.findAllEmployeeView().stream()
-                .filter(x->x.getSalary()==max).forEach(employeeViewList::add);
+                .filter(x->x.getSalary()==max).forEach(employeeInfoList::add);
         logger.debug("Database was accessed successfully");
-        return  employeeViewList;
+        return employeeInfoList;
     }
     @Override
-    public List<EmployeeView> getEmployeesOnPosition(String positionInfo){
+    public List<EmployeeInfo> getEmployeesOnPosition(String positionInfo){
         logger.info("Was invoked method for getting employee with highest salary");
         if(positionInfo==null||positionInfo.isBlank()){
-            List<EmployeeView> employeeViewList = employeeRepository.findAllEmployeeView();
+            List<EmployeeInfo> employeeInfoList = employeeRepository.findAllEmployeeView();
             logger.debug("Database was accessed successfully");
-            return employeeViewList;
+            return employeeInfoList;
 
         }
         try{
 
             Integer a  = Integer.parseInt(positionInfo);
-            List<EmployeeView> employeeViewList = employeeRepository.findByPositionId(a);
+            List<EmployeeInfo> employeeInfoList = employeeRepository.findByPositionId(a);
             logger.debug("Database was accessed successfully");
-            return employeeViewList;
+            return employeeInfoList;
 
         }catch (NumberFormatException e){
-            List<EmployeeView> employeeViewList = employeeRepository.findByPositionName(positionInfo);
+            List<EmployeeInfo> employeeInfoList = employeeRepository.findByPositionName(positionInfo);
             logger.debug("Database was accessed successfully");
-            return employeeViewList;
+            return employeeInfoList;
         }
     }
 

@@ -3,7 +3,7 @@ package ru.skypro.lessons.springboot.springboot.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.lessons.springboot.springboot.dto.EmployeeDTO;
-import ru.skypro.lessons.springboot.springboot.projections.EmployeeView;
+import ru.skypro.lessons.springboot.springboot.projections.EmployeeInfo;
 import ru.skypro.lessons.springboot.springboot.service.EmployeeService;
 
 import java.util.List;
@@ -33,12 +33,12 @@ public class UserEmployeeController {
     }
 
     @GetMapping("/EmployeeWithHighestSalary")
-    public List<EmployeeView> getEmployeeWithHighestSalary(){
+    public List<EmployeeInfo> getEmployeeWithHighestSalary(){
         return employeeService.getEmployeeWithHighestSalary();
 
     }
     @GetMapping("/")
-    public List<EmployeeView> getEmployeesOnPosition(@RequestParam(value = "position", required = false) String positionInfo){
+    public List<EmployeeInfo> getEmployeesOnPosition(@RequestParam(value = "position", required = false) String positionInfo){
         return employeeService.getEmployeesOnPosition(positionInfo);
     }
     @GetMapping("/page")

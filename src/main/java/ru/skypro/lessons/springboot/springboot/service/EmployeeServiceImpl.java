@@ -34,7 +34,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<EmployeeDTO> getAllEmployees() {
         logger.info("Was invoked method for getting all employees");
-        List<EmployeeDTO> employeeDTOList = employeeRepository.findAllEmployeeDTO();
+        List<EmployeeDTO> employeeDTOList = employeeRepository.findAllEmployee().stream().map(EmployeeDTO::fromEmployee).toList();
 
         logger.debug("Database was accessed successfully");
 
@@ -99,10 +99,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         logger.info("Was invoked method for getting employee with highest salary");
         List<EmployeeInfo> employeeInfoList = new ArrayList<>();
 
-        int max = employeeRepository.findAllEmployeeView().stream()
-                .max(Comparator.comparingInt(EmployeeInfo::getSalary)).get().getSalary();
+        int max = employeeRepository.findAllEmployee().stream()
+                .max(Comparator.comparingInt(Employee::getSalary)).get().getSalary();
         logger.debug("Database was accessed successfully");
-        employeeRepository.findAllEmployeeView().stream()
+        employeeRepository.findAllEmployeeInfo().stream()
                 .filter(x->x.getSalary()==max).forEach(employeeInfoList::add);
         logger.debug("Database was accessed successfully");
         return employeeInfoList;
@@ -111,7 +111,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<EmployeeInfo> getEmployeesOnPosition(String positionInfo){
         logger.info("Was invoked method for getting employee with highest salary");
         if(positionInfo==null||positionInfo.isBlank()){
-            List<EmployeeInfo> employeeInfoList = employeeRepository.findAllEmployeeView();
+            List<EmployeeInfo> employeeInfoList = employeeRepository.findAllEmployeeInfo();
             logger.debug("Database was accessed successfully");
             return employeeInfoList;
 

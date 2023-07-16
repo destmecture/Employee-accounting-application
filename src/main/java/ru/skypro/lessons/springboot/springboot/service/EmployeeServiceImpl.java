@@ -99,8 +99,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         logger.info("Was invoked method for getting employee with highest salary");
         List<EmployeeInfo> employeeInfoList = new ArrayList<>();
 
-        int max = employeeRepository.findAllEmployee().stream()
-                .max(Comparator.comparingInt(Employee::getSalary)).get().getSalary();
+        int max = employeeRepository.findAllEmployeeInfo().stream()
+                .max(Comparator.comparingInt(EmployeeInfo::getSalary)).get().getSalary();
         logger.debug("Database was accessed successfully");
         employeeRepository.findAllEmployeeInfo().stream()
                 .filter(x->x.getSalary()==max).forEach(employeeInfoList::add);

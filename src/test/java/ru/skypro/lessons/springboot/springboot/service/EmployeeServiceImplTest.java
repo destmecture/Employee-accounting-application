@@ -126,14 +126,15 @@ public class EmployeeServiceImplTest {
     @DisplayName("Get all employees and call repository once")
     @Test
     void findAllEmployeesDTO_ShouldCallRepositoryOnce() {
-        when(repositoryMock.findAllEmployeeDTO())
-                .thenReturn(EMPLOYEE_DTO_TEST_LIST);
+        when(repositoryMock.findAllEmployee())
+                .thenReturn(EMPLOYEE_TEST_LIST);
+
 
         List<EmployeeDTO> actual = out.getAllEmployees();
 
         assertIterableEquals(EMPLOYEE_DTO_TEST_LIST, actual);
 
-        verify(repositoryMock, times(1)).findAllEmployeeDTO();
+        verify(repositoryMock, times(1)).findAllEmployee();
     }
 
     @DisplayName("Returned max salary employees and call repository twice")

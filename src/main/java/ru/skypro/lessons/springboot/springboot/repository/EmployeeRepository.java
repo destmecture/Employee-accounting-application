@@ -14,14 +14,18 @@ import java.util.List;
 @Repository
 public interface EmployeeRepository extends CrudRepository<Employee, Integer>, PagingAndSortingRepository<Employee, Integer>   {
     List<Employee> findBySalaryGreaterThan(Integer definedSalary);
+
+    @Query(value = "SELECT e FROM Employee e")
+    List<Employee> findAllEmployee();
+
     @Query(value = "SELECT e FROM Employee e")
     List<EmployeeDTO> findAllEmployeeDTO();
-    @Query(value = "SELECT e FROM Employee e")
-    List<EmployeeInfo> findAllEmployeeView();
-    @Query(value = "SELECT e FROM Employee e JOIN FETCH Position p ON e.position = p " +
+    @Query(value = "SELECT new ru.skypro.lessons.springboot.springboot.projections.EmployeeInfo(e.name, e.salary) FROM Employee e")
+    List<EmployeeInfo> findAllEmployeeInfo();
+    @Query(value = "SELECT new ru.skypro.lessons.springboot.springboot.projections.EmployeeInfo(e.name, e.salary) FROM Employee e JOIN FETCH Position p ON e.position = p " +
             "WHERE e.position.position_id = :id")
     List<EmployeeInfo> findByPositionId(@Param("id")Integer id);
-    @Query(value = "SELECT e FROM Employee e JOIN FETCH Position p ON e.position = p " +
+    @Query(value = "SELECT new ru.skypro.lessons.springboot.springboot.projections.EmployeeInfo(e.name, e.salary) FROM Employee e JOIN FETCH Position p ON e.position = p " +
             "WHERE e.position.position_name = :name")
     List<EmployeeInfo> findByPositionName(@Param("name")String name);
 

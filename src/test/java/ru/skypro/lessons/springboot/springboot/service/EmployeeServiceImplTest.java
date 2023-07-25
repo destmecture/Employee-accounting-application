@@ -16,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import ru.skypro.lessons.springboot.springboot.dto.EmployeeDTO;
 import ru.skypro.lessons.springboot.springboot.exceptions.IdNotFoundException;
-import ru.skypro.lessons.springboot.springboot.pojo.Employee;
 import ru.skypro.lessons.springboot.springboot.projections.EmployeeInfo;
 import ru.skypro.lessons.springboot.springboot.repository.EmployeeRepository;
 
@@ -127,20 +126,21 @@ public class EmployeeServiceImplTest {
     @DisplayName("Get all employees and call repository once")
     @Test
     void findAllEmployeesDTO_ShouldCallRepositoryOnce() {
-        when(repositoryMock.findAllEmployeeDTO())
-                .thenReturn(EMPLOYEE_DTO_TEST_LIST);
+        when(repositoryMock.findAllEmployee())
+                .thenReturn(EMPLOYEE_TEST_LIST);
+
 
         List<EmployeeDTO> actual = out.getAllEmployees();
 
         assertIterableEquals(EMPLOYEE_DTO_TEST_LIST, actual);
 
-        verify(repositoryMock, times(1)).findAllEmployeeDTO();
+        verify(repositoryMock, times(1)).findAllEmployee();
     }
 
     @DisplayName("Returned max salary employees and call repository twice")
     @Test
     void getMaxSalaryEmployee_CorrectEmployees_ShouldCallRepository() {
-        when(repositoryMock.findAllEmployeeView())
+        when(repositoryMock.findAllEmployeeInfo())
                 .thenReturn(EMPLOYEE_INFO_TEST_LIST);
 
         List<EmployeeInfo> actual = out.getEmployeeWithHighestSalary();
@@ -149,7 +149,7 @@ public class EmployeeServiceImplTest {
 
         assertIterableEquals(EMPLOYEE_INFO_TEST_LIST.stream().filter(x->x.getSalary()==max).toList(), actual);
 
-        verify(repositoryMock, times(2)).findAllEmployeeView();
+        verify(repositoryMock, times(2)).findAllEmployeeInfo();
 
     }
 
@@ -176,14 +176,14 @@ public class EmployeeServiceImplTest {
     @ParameterizedTest
     @MethodSource("argumentsForReturningAllEmployeesByPosition")
     void returnEmployeesByPosition_NotCorrectPositionName_ShouldCallRepositoryOnce(String testArguments) {
-        when(repositoryMock.findAllEmployeeView())
+        when(repositoryMock.findAllEmployeeInfo())
                 .thenReturn(EMPLOYEE_INFO_TEST_LIST);
 
         List<EmployeeInfo> actual = out.getEmployeesOnPosition(testArguments);
 
         assertIterableEquals(EMPLOYEE_INFO_TEST_LIST,actual);
 
-        verify(repositoryMock, times(1)).findAllEmployeeView();
+        verify(repositoryMock, times(1)).findAllEmployeeInfo();
     }
 
     @DisplayName("Return first page by page number and call repository once")

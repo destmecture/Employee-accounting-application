@@ -1,4 +1,4 @@
-### Employee-accounting-application
+## Employee-accounting-application
 A small application for employee accounting. You can receive, add, delete employees. Added the ability to get employees by department. You can add a list of employees with a json file
 ## *This application using Spring Security* You can use this two authorized accounts:
 + *admin*:admin
